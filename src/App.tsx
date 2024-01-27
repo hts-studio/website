@@ -53,11 +53,11 @@ export default function App() {
             const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0)
             gradient.addColorStop(
                 0,
-                `hsl(${Math.sin(Date.now() * 0.001) * 60 + 270}, 100%, 50%)`
+                `hsl(${Math.sin(Date.now() * 0.001) * 60 + 270}, 100%, 50%)`,
             )
             gradient.addColorStop(
                 1,
-                `hsl(${Math.sin(Date.now() * 0.001) * 60 + 150}, 100%, 50%)`
+                `hsl(${Math.sin(Date.now() * 0.001) * 60 + 150}, 100%, 50%)`,
             )
 
             ctx.fillStyle = gradient
@@ -108,18 +108,18 @@ export default function App() {
                  */
                 const distance = Math.sqrt(
                     (endX - canvas.width / 2) ** 2 +
-                        (endY - canvas.height / 2) ** 2
+                        (endY - canvas.height / 2) ** 2,
                 )
 
                 ctx.strokeStyle = 'blue'
                 ctx.lineWidth = 2
                 const startAngle = Math.atan2(
                     lineY - canvas.height / 2,
-                    lineX - canvas.width / 2
+                    lineX - canvas.width / 2,
                 )
                 const endAngle = Math.atan2(
                     endY - canvas.height / 2,
-                    endX - canvas.width / 2
+                    endX - canvas.width / 2,
                 )
 
                 ctx.beginPath()
@@ -128,7 +128,7 @@ export default function App() {
                     canvas.height / 2,
                     20,
                     startAngle,
-                    endAngle
+                    endAngle,
                 )
                 ctx.stroke()
 
@@ -137,11 +137,11 @@ export default function App() {
                  */
                 const textX = Math.min(
                     Math.max(lineX - 25, 0),
-                    canvas.width - 120
+                    canvas.width - 120,
                 )
                 const textY = Math.min(
                     Math.max(lineY + brand.height / 1.5 / 2 + 20, 0),
-                    canvas.height - 80
+                    canvas.height - 80,
                 )
 
                 ctx.fillStyle = 'white'
@@ -155,7 +155,7 @@ export default function App() {
                 ctx.fillText(
                     `${distance.toFixed(2)}`,
                     canvas.width / 2,
-                    canvas.height / 2 - 30
+                    canvas.height / 2 - 30,
                 )
 
                 ctx.fillStyle = 'white'
@@ -164,7 +164,7 @@ export default function App() {
                 ctx.fillText(
                     `FPS: ${framerate.toFixed()}`,
                     canvas.width - 5,
-                    15
+                    15,
                 )
             }
 
