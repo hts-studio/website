@@ -30,11 +30,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build VuePress site
+      - name: Build website
         run: pnpm build
-
-      - name: Copy README.md
-        run: cp README.md dist
 
       - name: Deploy GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
