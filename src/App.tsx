@@ -69,12 +69,11 @@ export default function App() {
 
             ctx.globalCompositeOperation = 'destination-over'
 
+            /** Framerate bs */
             frameCounterRef.current += 1
             const currentTime = performance.now()
             const deltaTime = currentTime - lastFrameTimeRef.current
             const framerate = 1000 / deltaTime
-
-            // Update last frame time
             lastFrameTimeRef.current = currentTime
 
             if (debugRef.current) {
