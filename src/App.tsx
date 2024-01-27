@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import Brand from './assets/brand.svg'
+import DvD from './assets/dvd.svg'
 
 export default function App() {
     const [canvasWidth, setCanvasWidth] = useState(window.innerWidth)
     const [canvasHeight, setCanvasHeight] = useState(window.innerHeight)
+    const [currentLogo, setCurrentLogo] = useState(Brand)
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null)
     const brandRef = useRef<HTMLImageElement | null>(null)
     const debugRef = useRef(false)
+    const frameCounterRef = useRef(0)
+    const lastFrameTimeRef = useRef(performance.now())
 
     useEffect(() => {
         const canvas = canvasRef.current
@@ -38,6 +42,8 @@ export default function App() {
                 debugRef.current = !debugRef.current
             } else if (e.code === 'KeyD') {
                 window.open('https://discord.gg/x8BHPftbar', '_blank')
+            } else if (e.code === 'KeyQ') {
+                setCurrentLogo((prevLogo) => (prevLogo === DvD ? Brand : DvD))
             }
         })
 
@@ -62,6 +68,14 @@ export default function App() {
             ctx.drawImage(brand, x, y, brand.width / 1.5, brand.height / 1.5)
 
             ctx.globalCompositeOperation = 'destination-over'
+
+            frameCounterRef.current += 1
+            const currentTime = performance.now()
+            const deltaTime = currentTime - lastFrameTimeRef.current
+            const framerate = 1000 / deltaTime
+
+            // Update last frame time
+            lastFrameTimeRef.current = currentTime
 
             if (debugRef.current) {
                 const lineX = x + brand.width / 1.5 / 2
@@ -90,6 +104,35 @@ export default function App() {
                 ctx.stroke()
 
                 /**
+                 * Debug Arc (Blue: Distance between red and green lines)
+                 */
+                const distance = Math.sqrt(
+                    (endX - canvas.width / 2) ** 2 +
+                        (endY - canvas.height / 2) ** 2
+                )
+
+                ctx.strokeStyle = 'blue'
+                ctx.lineWidth = 2
+                const startAngle = Math.atan2(
+                    lineY - canvas.height / 2,
+                    lineX - canvas.width / 2
+                )
+                const endAngle = Math.atan2(
+                    endY - canvas.height / 2,
+                    endX - canvas.width / 2
+                )
+
+                ctx.beginPath()
+                ctx.arc(
+                    canvas.width / 2,
+                    canvas.height / 2,
+                    20,
+                    startAngle,
+                    endAngle
+                )
+                ctx.stroke()
+
+                /**
                  * Debug Text
                  */
                 const textX = Math.min(
@@ -108,13 +151,22 @@ export default function App() {
                 ctx.fillText(`y: ${y.toFixed(2)}`, textX, textY + 20)
                 ctx.fillText(`vx: ${vx.toFixed(2)}`, textX, textY + 40)
                 ctx.fillText(`vy: ${vy.toFixed(2)}`, textX, textY + 60)
-            }
+                ctx.textAlign = 'center'
+                ctx.fillText(
+                    `${distance.toFixed(2)}`,
+                    canvas.width / 2,
+                    canvas.height / 2 - 30
+                )
 
-            ctx.fillStyle = 'white'
-            ctx.font = '14px Rubik'
-            ctx.textAlign = 'left'
-            ctx.fillText(`[D] Discord`, 5, 15)
-            ctx.fillText(`[E] Debug`, 5, 35)
+                ctx.fillStyle = 'white'
+                ctx.font = '14px Rubik'
+                ctx.textAlign = 'right'
+                ctx.fillText(
+                    `FPS: ${framerate.toFixed()}`,
+                    canvas.width - 5,
+                    15
+                )
+            }
 
             x += vx
             y += vy
@@ -147,7 +199,7 @@ export default function App() {
             ></canvas>
             <img
                 ref={brandRef}
-                src={Brand}
+                src={currentLogo}
                 alt="Brand"
                 style={{ display: 'none' }}
             />
